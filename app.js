@@ -1,8 +1,6 @@
 import env from './v1/config/env.js'
 import express from 'express'
-import adminRegisterRouter from './v1/routes/admin/register.js'
 import testRouter from './v1/routes/test.js'
-import session from 'express-session'
 
 const app = express()
 
@@ -12,21 +10,10 @@ app.use((err, _req, res, _next) => {
     res.end('{"error": "Internal Server Error"}')
 })
 
-app.use(session(
-    {
-        name: 'adminsid',
-        secret: env.SESSION_SECRET,
-        resave: false,
-        saveUninitialized: false,
-        cookie: { secure: env.envName === 'prod', maxAge: 60 * 24 * 60 * 60 * 1000, httpOnly: true, sameSite: 'strict' }
-    }
-))
 
 app.use(express.json())
 
 app.use(express.urlencoded({ extended: true }));
-
-app.use('/api/v1/admin', adminRegisterRouter)
 
 app.use('/api/v1/test', testRouter)
 
