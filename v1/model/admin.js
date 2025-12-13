@@ -8,6 +8,7 @@ Admin.findByEmail = function (email, callback) {
     const query = 'SELECT * FROM admins WHERE email = ?'
     db.query(query, [email], function (err, results) {
         if (err) return callback(err)
-        callback(null, results)
+        if (!results[0]) return callback({ 'mess': 'admin not found', 'statusCode': 404 })
+        callback(null, results[0])
     })
 }

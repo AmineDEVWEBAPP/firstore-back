@@ -11,7 +11,7 @@ if (envName === 'prod') process.loadEnvFile('.env.prod')
     'DB_USER':process.env.DB_USER,
     'DB_PASSWORD':process.env.DB_PASSWORD,
     'DB_NAME':process.env.DB_NAME,
-    'SESSION_SECRET': process.env.SESSION_SECRET
+    'JWT_SECRET': process.env.JWT_SECRET
   }
 
   export default env
