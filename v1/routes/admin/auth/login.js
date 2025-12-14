@@ -5,6 +5,7 @@ import strictArgs from '../../../middlewares/strictArgs.js'
 import correctPassword from '../../../middlewares/admin/auth/correctPassword.js'
 import validator from 'validator'
 import error from '../../../utils/error.js'
+import loginLimiter from '../../../middlewares/loginLimiter.js'
 
 const router = express.Router()
 export default router
@@ -20,5 +21,7 @@ router.use(function (req, res, next) {
 router.use(correctPassword)
 
 router.use(allowMethods(['POST']))
+
+router.use(loginLimiter)
 
 router.post('/login', adminLogin)
