@@ -1,11 +1,19 @@
-import Offers from '../model/offers.js'
+import Offer from '../model/offers.js'
 import error from '../utils/error.js'
 
-export function createOffers(req, res) {
+export function createOffer(req, res) {
     const body = req.body
-    Offers.create(body, function (err, _) {
+    Offer.create(body, function (err, _) {
         if (err) return error(err, res)
-        res.end('{"status":success}')
+        res.writeHead(201)
+        res.end('{"status": "success"}')
+    })
+}
+
+export function updateOffer(req, res) {
+    Offer.update(req.body, function (err) {
+        if (err) return error(err, res)
+        res.end('{"status": "success"}')
     })
 }
 

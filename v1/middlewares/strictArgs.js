@@ -1,24 +1,26 @@
-export default function strictArgs(args) {
+import error from "../utils/error.js"
+
+export default function strictArgs(args, { require = true, invalid = false } = {}) {
+
     return function (req, res, next) {
-        const argsKey = Object.keys(args)
         let err = null
-        err = missingArs(req, res, argsKey)
-        if (err) {
-            res.writeHead(400)
-            return res.end(err)
+        const argsKey = Object.keys(args)
+        if (require) {
+            err = missingArs(req, argsKey)
         }
-        if (!res.finished) {
-            err = strictType(req, res, args)
-            if (err) {
-                res.writeHead(400)
-                return res.end(err)
-            }
+        if (err) return error(err, res)
+        err = strictType(req, args)
+        if (err) return error(err, res)
+        if (invalid) {
+            err = invalidFields(req, argsKey)
         }
+        if (err) return error(err, res)
         next()
     }
 }
 
-function missingArs(req, _, argsKey) {
+
+function missingArs(req, argsKey) {
     let missingArgs = []
     for (const arg of argsKey) {
         if (req.body) {
@@ -30,14 +32,20 @@ function missingArs(req, _, argsKey) {
         }
     }
     if (missingArgs.length !== 0) {
-        return `{ 'error': '${missingArgs.join(', ')} arguments are missing' }`
+        return { 'mess': `${missingArgs.join(', ')} arguments are missing`, 'statusCode': 400 }
     }
 }
 
-function strictType(req, _, argsType) {
+function strictType(req, argsType) {
     for (const key in argsType) {
-        if (typeof req.body[key] !== argsType[key]) {
-            return '{"error": "Invalid argument type"}'
+        if (req.body[key] !== undefined && typeof req.body[key] !== argsType[key]) {
+            return { "mess": "Invalid argument type", 'statusCode': 400 }
         }
     }
+}
+
+function invalidFields(req, argsKey) {
+    const invalids = Object.keys(req.body).filter(f => !argsKey.includes(f))
+    if (invalids.length !== 0)
+        return { "mess": `invalid feilds: ${invalids.join(', ')}`, 'statusCode': 400 }
 }
