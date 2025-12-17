@@ -1,11 +1,11 @@
 import express from 'express'
-import allowMethods from '../../../middlewares/allowedMethods.js'
-import { adminLogin } from '../../../controller/admin.js'
-import strictArgs from '../../../middlewares/strictArgs.js'
-import correctPassword from '../../../middlewares/admin/auth/correctPassword.js'
+import allowMethods from '../middlewares/allowedMethods.js'
+import { adminLogin } from '../controller/admin.js'
+import strictArgs from '../middlewares/strictArgs.js'
+import correctPassword from '../middlewares/admin/correctPassword.js'
 import validator from 'validator'
-import error from '../../../utils/error.js'
-import loginLimiter from '../../../middlewares/loginLimiter.js'
+import error from '../utils/error.js'
+import loginLimiter from '../middlewares/loginLimiter.js'
 
 const router = express.Router()
 export default router

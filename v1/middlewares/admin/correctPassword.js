@@ -1,6 +1,6 @@
-import Admin from '../../../model/admin.js'
-import error from '../../../utils/error.js'
-import verifyPassword from '../../../utils/verifyPassword.js'
+import Admin from '../../model/admin.js'
+import error from '../../utils/error.js'
+import verifyPassword from '../../utils/verifyPassword.js'
 
 export default function correctPassword(req, res, next) {
     const { email, password } = req.body

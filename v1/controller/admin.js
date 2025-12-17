@@ -7,6 +7,7 @@ export function adminLogin(req, res) {
     const email = req.body.email
     Admin.findByEmail(email, function (err, result) {
         if (err) return error({ "mess": "not Found", "statusCode": 404 }, res)
+        if (!result[0]) return callback({ 'mess': 'admin not found', 'statusCode': 404 })
         const payload = {
             'id': result['id'],
             'email': email,
