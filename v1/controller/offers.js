@@ -17,3 +17,10 @@ export function updateOffer(req, res) {
     })
 }
 
+export function deleteOffer(req, res) {
+    const id = req.body.id
+    Offer.delete(id, function (err) {
+        if (err) return error(err, res)
+        res.end('{"status": "success"}')
+    })
+}

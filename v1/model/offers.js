@@ -26,3 +26,12 @@ Offer.update = function (data, callback) {
         callback(null, result)
     })
 }
+
+Offer.delete = function (id, callback) {
+    const query = 'DELETE FROM offers WHERE id = ?'
+    db.query(query, [id], function (err, result) {
+        if (err) return callback(err)
+        if (result.affectedRows === 0) return callback({ 'mess': 'Offer not found', 'statusCode': 404 })
+        callback()
+    })
+}
