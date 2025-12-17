@@ -22,7 +22,6 @@ export function adminLogin(req, res) {
             'sameSite': 'strict',
             'expires': expiresIn
         })
-        res.cookie('test','mmoom')
         res.writeHead(200)
         res.end('{"status": "success"}')
     })

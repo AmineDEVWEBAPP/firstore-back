@@ -3,10 +3,9 @@ import express from 'express'
 import testRouter from './v1/routes/test.js'
 import adminLoginRoute from './v1/routes/admin/auth/login.js'
 import isAdmin from './v1/middlewares/admin/isAdmin.js'
-import ordersRoute from './v1/routes/orders.js'
+import offersRoute from './v1/routes/offers.js'
 import helmet from 'helmet'
 import cors from 'cors'
-import authJWT from './v1/middlewares/admin/authJWT.js'
 
 const app = express()
 
@@ -35,7 +34,7 @@ app.use('/api/v1/test', testRouter)
 
 app.use('/api/v1/admin', isAdmin, adminLoginRoute)
 
-app.use('/api/v1/dashboard', authJWT, ordersRoute)
+app.use('/api/v1/offers', offersRoute)
 
 app.use(function (_, res) {
     res.writeHead(404)

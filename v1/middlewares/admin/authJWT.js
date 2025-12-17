@@ -12,7 +12,8 @@ export default function authJWT(req, res, next) {
         if (decoded['role'] !== 'admin') return notFound(res)
         next()
     } catch (e) {
-        return error(e, res)
+        console.error(e)
+        return error({ 'mess': 'not found', 'statusCode': 404 }, res)
     }
 }
 
