@@ -11,16 +11,19 @@ export function createOffer(req, res) {
 }
 
 export function updateOffer(req, res) {
-    Offer.update(req.body, function (err) {
+    const id = req.params.id
+    Offer.update(id, req.body, function (err, result) {
         if (err) return error(err, res)
+        if (result.affectedRows === 0) return error({ 'mess': 'Offer not found', 'statusCode': 404 }, res)
         res.end('{"status": "success"}')
     })
 }
 
 export function deleteOffer(req, res) {
-    const id = req.body.id
-    Offer.delete(id, function (err) {
+    const id = req.params.id
+    Offer.delete(id, function (err, result) {
         if (err) return error(err, res)
+        if (result.affectedRows === 0) return error({ 'mess': 'Offer not found', 'statusCode': 404 }, res)
         res.end('{"status": "success"}')
     })
 }

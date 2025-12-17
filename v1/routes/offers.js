@@ -2,7 +2,7 @@ import express from 'express'
 import { createOffer, deleteOffer, getOfferById, getOffers, updateOffer } from '../controller/offers.js'
 import authJWT from '../middlewares/admin/authJWT.js'
 import strictArgs from '../middlewares/strictArgs.js'
-import error from '../utils/error.js'
+import emptyBody from '../middlewares/emptyBody.js'
 
 const router = express.Router()
 export default router
@@ -22,8 +22,7 @@ router.post('/', [authJWT,
         'haveSpatialAudio': 'boolean'
     }, false)], createOffer)
 
-router.put('/', [authJWT, strictArgs({ 'id': 'number' }), strictArgs({
-    'id': 'number',
+router.put('/:id', [authJWT, strictArgs({
     'name': 'string',
     'price': 'number',
     'priceCurrency': 'string',
@@ -33,15 +32,10 @@ router.put('/', [authJWT, strictArgs({ 'id': 'number' }), strictArgs({
     'supportedDevices': 'string',
     'maximumDevices': 'number',
     'maximumDownloadDevices': 'number'
-}, false), function (req, res, next) {
-    const requireData = { ...req.body }
-    delete requireData.id
-    if (Object.keys(requireData).length === 0) return error({ 'mess': 'fields is require', 'statusCode': 400 }, res)
-    next()
-}], updateOffer)
+}, false), emptyBody], updateOffer)
 
-router.delete('/', [authJWT, strictArgs({ 'id': 'number' })], deleteOffer)
+router.delete('/:id', authJWT, deleteOffer)
 
-router.get('/',getOffers)
+router.get('/', getOffers)
 
-router.get('/:id',getOfferById)
+router.get('/:id', getOfferById)

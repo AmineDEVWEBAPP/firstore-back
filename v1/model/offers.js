@@ -4,7 +4,7 @@ import dataToQuery from '../utils/dataToSql.js'
 const Offer = {}
 export default Offer
 
-Offer.columns = ['id', 'name', 'price', 'price_currency', 'quality', 'resulotion', 'have_spatial_audio', 'supported_devices', 'maximum_devices', 'maximum_download_devices']
+Offer.columns = ['name', 'price', 'price_currency', 'quality', 'resulotion', 'have_spatial_audio', 'supported_devices', 'maximum_devices', 'maximum_download_devices']
 
 Offer.create = function (data, callback) {
     const { keys, values } = dataToQuery.create(data, Offer.columns)
@@ -15,14 +15,12 @@ Offer.create = function (data, callback) {
     })
 }
 
-Offer.update = function (data, callback) {
-    const convertedData = { ...data }
-    delete convertedData.id
-    const { keys, values } = dataToQuery.update(convertedData, Offer.columns)
-    const query = `UPDATE offers SET ${keys} WHERE id = ${data.id}`
+Offer.update = function (id, data, callback) {
+    const { keys, values } = dataToQuery.update(data, Offer.columns)
+    values.push(id)
+    const query = `UPDATE offers SET ${keys} WHERE id = ?`
     db.query(query, values, function (err, result) {
         if (err) return callback(err)
-        if (result.affectedRows === 0) return callback({ 'mess': 'Offer not found', 'statusCode': 404 })
         callback(null, result)
     })
 }
@@ -31,8 +29,7 @@ Offer.delete = function (id, callback) {
     const query = 'DELETE FROM offers WHERE id = ?'
     db.query(query, [id], function (err, result) {
         if (err) return callback(err)
-        if (result.affectedRows === 0) return callback({ 'mess': 'Offer not found', 'statusCode': 404 })
-        callback()
+        callback(null, result)
     })
 }
 
