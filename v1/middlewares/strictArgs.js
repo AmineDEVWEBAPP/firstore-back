@@ -1,26 +1,21 @@
 import error from "../utils/error.js"
 
-export default function strictArgs(args, { require = true, invalid = false } = {}) {
-
+export default function strictArgs(args, required = true) {
     return function (req, res, next) {
         let err = null
-        const argsKey = Object.keys(args)
-        if (require) {
-            err = missingArs(req, argsKey)
+        if (required) {
+            err = missingArs(req, args)
         }
         if (err) return error(err, res)
         err = strictType(req, args)
-        if (err) return error(err, res)
-        if (invalid) {
-            err = invalidFields(req, argsKey)
-        }
         if (err) return error(err, res)
         next()
     }
 }
 
 
-function missingArs(req, argsKey) {
+function missingArs(req, args) {
+    const argsKey = Object.keys(args)
     let missingArgs = []
     for (const arg of argsKey) {
         if (req.body) {
@@ -31,21 +26,15 @@ function missingArs(req, argsKey) {
             missingArgs.push(arg)
         }
     }
-    if (missingArgs.length !== 0) {
-        return { 'mess': `${missingArgs.join(', ')} arguments are missing`, 'statusCode': 400 }
-    }
+    if (missingArgs.length !== 0) return { 'mess': `Arguments are missing: ${missingArgs.join(', ')}`, 'statusCode': 400 }
 }
 
 function strictType(req, argsType) {
+    let invalidArgs = []
     for (const key in argsType) {
         if (req.body[key] !== undefined && typeof req.body[key] !== argsType[key]) {
-            return { "mess": "Invalid argument type", 'statusCode': 400 }
+            invalidArgs.push(key)
         }
     }
-}
-
-function invalidFields(req, argsKey) {
-    const invalids = Object.keys(req.body).filter(f => !argsKey.includes(f))
-    if (invalids.length !== 0)
-        return { "mess": `invalid feilds: ${invalids.join(', ')}`, 'statusCode': 400 }
+    if (invalidArgs.length !== 0) return { "mess": `Invalid argument type: ${invalidArgs.join(', ')}`, 'statusCode': 400 }
 }

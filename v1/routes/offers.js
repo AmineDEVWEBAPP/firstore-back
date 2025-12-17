@@ -20,9 +20,9 @@ router.post('/', [authJWT,
     }),
     strictArgs({
         'haveSpatialAudio': 'boolean'
-    }, { require: false })], createOffer)
+    }, false)], createOffer)
 
-router.patch('/', [authJWT, strictArgs({ 'id': 'number' }), strictArgs({
+router.put('/', [authJWT, strictArgs({ 'id': 'number' }), strictArgs({
     'id': 'number',
     'name': 'string',
     'price': 'number',
@@ -33,9 +33,10 @@ router.patch('/', [authJWT, strictArgs({ 'id': 'number' }), strictArgs({
     'supportedDevices': 'string',
     'maximumDevices': 'number',
     'maximumDownloadDevices': 'number'
-}, { require: false, invalid: true }), function (req, res, next) {
+}, false), function (req, res, next) {
     const requireData = { ...req.body }
     delete requireData.id
     if (Object.keys(requireData).length === 0) return error({ 'mess': 'fields is require', 'statusCode': 400 }, res)
     next()
 }], updateOffer)
+

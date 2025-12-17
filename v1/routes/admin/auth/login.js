@@ -22,6 +22,6 @@ router.use(correctPassword)
 
 router.use(allowMethods(['POST']))
 
-//TODO: router.use(loginLimiter)
+router.use(loginLimiter)
 
-router.post('/login', adminLogin)
+router.post('/login', loginLimiter, adminLogin)
