@@ -48,3 +48,11 @@ Offer.findByID = function (id, callback) {
         callback(null, result)
     })
 }
+
+Offer.findAccounds = function (id, callback) {
+    const query = 'SELECT * FROM accounts WHERE offer_id = ?'
+    db.query(query, [id], function (err, results) {
+        if (err) return callback(err)
+        callback(null, results)
+    })
+}

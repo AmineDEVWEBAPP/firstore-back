@@ -1,5 +1,5 @@
 import express from 'express'
-import { createOffer, deleteOffer, getOfferById, getOffers, updateOffer } from '../controller/offers.js'
+import { createOffer, deleteOffer, getAccounts, getOfferById, getOffers, updateOffer } from '../controller/offers.js'
 import authJWT from '../middlewares/admin/authJWT.js'
 import strictArgs from '../middlewares/strictArgs.js'
 import emptyBody from '../middlewares/emptyBody.js'
@@ -39,3 +39,5 @@ router.delete('/:id', authJWT, deleteOffer)
 router.get('/', getOffers)
 
 router.get('/:id', getOfferById)
+
+router.get('/:id/accounts', getAccounts)

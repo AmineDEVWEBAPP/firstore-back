@@ -43,3 +43,12 @@ export function getOfferById(req, res) {
         res.end(JSON.stringify(result[0]))
     })
 }
+
+export function getAccounts(req, res) {
+    const id = req.params.id
+    Offer.findAccounds(id, function (err, results) {
+        if (err) return error(err, res)
+        if (results.length === 0) return error({ 'mess': 'Offer not found', 'statusCode': 404 }, res)
+        res.end(JSON.stringify(results))
+    })
+}
