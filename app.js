@@ -6,6 +6,7 @@ import isAdmin from './v1/middlewares/admin/isAdmin.js'
 import offersRoute from './v1/routes/offers.js'
 import helmet from 'helmet'
 import cors from 'cors'
+import accountsRoute from './v1/routes/accounts.js'
 
 const app = express()
 
@@ -35,6 +36,8 @@ app.use('/api/v1/test', testRouter)
 app.use('/api/v1/admin', isAdmin, adminLoginRoute)
 
 app.use('/api/v1/offers', offersRoute)
+
+app.use('/api/v1/accounts', accountsRoute)
 
 app.use(function (_, res) {
     res.writeHead(404)
