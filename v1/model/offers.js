@@ -35,3 +35,19 @@ Offer.delete = function (id, callback) {
         callback()
     })
 }
+
+Offer.findAll = function (callback) {
+    const query = 'SELECT * FROM offers'
+    db.query(query, [], function (err, results) {
+        if (err) return callback(err)
+        callback(null, results)
+    })
+}
+
+Offer.findByID = function (id, callback) {
+    const query = 'SELECT * FROM offers WHERE id = ?'
+    db.query(query, [id], function (err, result) {
+        if (err) return callback(err)
+        callback(null, result)
+    })
+}

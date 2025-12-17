@@ -1,5 +1,5 @@
 import express from 'express'
-import { createOffer, deleteOffer, updateOffer } from '../controller/offers.js'
+import { createOffer, deleteOffer, getOfferById, getOffers, updateOffer } from '../controller/offers.js'
 import authJWT from '../middlewares/admin/authJWT.js'
 import strictArgs from '../middlewares/strictArgs.js'
 import error from '../utils/error.js'
@@ -41,3 +41,7 @@ router.put('/', [authJWT, strictArgs({ 'id': 'number' }), strictArgs({
 }], updateOffer)
 
 router.delete('/', [authJWT, strictArgs({ 'id': 'number' })], deleteOffer)
+
+router.get('/',getOffers)
+
+router.get('/:id',getOfferById)

@@ -24,3 +24,19 @@ export function deleteOffer(req, res) {
         res.end('{"status": "success"}')
     })
 }
+
+export function getOffers(_, res) {
+    Offer.findAll(function (err, results) {
+        if (err) return error(err, res)
+        res.end(JSON.stringify(results))
+    })
+}
+
+export function getOfferById(req, res) {
+    const id = req.params.id
+    Offer.findByID(id, function (err, result) {
+        if (err) return error(err, res)
+        if (result.length === 0) return error({ 'mess': 'Offer not found', 'statusCode': 404 }, res)
+        res.end(JSON.stringify(result[0]))
+    })
+}
