@@ -44,3 +44,12 @@ export function getAccounts(_, res) {
         res.end(JSON.stringify(results))
     })
 }
+
+export function getAccountById(req, res) {
+    const id = req.params.id
+    Account.findById(id, function (err, results) {
+        if (err) return error(err, res)
+        if (results.length === 0) return error({ 'mess': 'Account not found', 'statusCode': 404 }, res)
+        res.end(JSON.stringify(results[0]))
+    })
+}
