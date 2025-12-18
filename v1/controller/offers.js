@@ -1,4 +1,4 @@
-import Offer from '../model/offers.js'
+import Offer from '../model/offer.js'
 import error from '../utils/error.js'
 
 export function createOffer(req, res) {

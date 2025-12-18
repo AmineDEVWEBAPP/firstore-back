@@ -12,3 +12,12 @@ Account.create = function (data, callback) {
     })
 
 }
+
+Account.delete = function (id, callback) {
+    const query = 'DELETE FROM accounts WHERE id = ?'
+    db.query(query, [id], function (err, result) {
+        if (err) return callback(err)
+        callback(null, result)
+    })
+}
+
