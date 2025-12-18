@@ -23,7 +23,8 @@ export function deleteAccount(req, res) {
     Account.delete(id, function (err, result) {
         if (err) return error(err, res)
         if (result.affectedRows === 0) return error({ 'mess': 'Account not found', 'statusCode': 404 }, res)
-        res.end('{"status": "success"}')
+        res.writeHead(204)
+        res.end()
     })
 }
 
@@ -32,7 +33,8 @@ export function updateAccount(req, res) {
     Account.update(id, req.body, function (err, result) {
         if (err) return error(err, res)
         if (result.affectedRows === 0) return error({ 'mess': 'Account not found', 'statusCode': 404 }, res)
-        res.end('{"status": "success"}')
+        res.writeHead(204)
+        res.end()
     })
 }
 

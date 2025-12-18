@@ -16,7 +16,8 @@ export function updateOffer(req, res) {
     Offer.update(id, req.body, function (err, result) {
         if (err) return error(err, res)
         if (result.affectedRows === 0) return error({ 'mess': 'Offer not found', 'statusCode': 404 }, res)
-        res.end('{"status": "success"}')
+        res.writeHead(204)
+        res.end()
     })
 }
 
@@ -25,7 +26,8 @@ export function deleteOffer(req, res) {
     Offer.delete(id, function (err, result) {
         if (err) return error(err, res)
         if (result.affectedRows === 0) return error({ 'mess': 'Offer not found', 'statusCode': 404 }, res)
-        res.end('{"status": "success"}')
+        res.writeHead(204)
+        res.end()
     })
 }
 
