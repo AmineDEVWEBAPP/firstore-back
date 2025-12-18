@@ -1,4 +1,5 @@
 import db from '../config/db.js'
+import dataToQuery from '../utils/dataToSql.js'
 
 const Account = {}
 export default Account
@@ -21,3 +22,12 @@ Account.delete = function (id, callback) {
     })
 }
 
+Account.update = function (id, data, callback) {
+    const { keys, values } = dataToQuery.update(data, ['email', 'password', 'it_works'])
+    values.push(id)
+    const query = `UPDATE accounts SET ${keys} WHERE id = ?`
+    db.query(query, values, function (err, result) {
+        if (err) return callback(err)
+        callback(null, result)
+    })
+}

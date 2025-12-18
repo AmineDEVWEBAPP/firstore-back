@@ -12,7 +12,16 @@ export function createAccount(req, res) {
 export function deleteAccount(req, res) {
     const id = req.params.id
     Account.delete(id, function (err, result) {
-        if (err) return error(err,res)
+        if (err) return error(err, res)
+        if (result.affectedRows === 0) return error({ 'mess': 'Account not found', 'statusCode': 404 }, res)
+        res.end('{"status": "success"}')
+    })
+}
+
+export function updateAccount(req, res) {
+    const id = req.params.id
+    Account.update(id, req.body, function (err, result) {
+        if (err) return error(err, res)
         if (result.affectedRows === 0) return error({ 'mess': 'Account not found', 'statusCode': 404 }, res)
         res.end('{"status": "success"}')
     })
