@@ -2,11 +2,12 @@ import Offer from '../model/offer.js'
 import error from '../utils/error.js'
 
 export function createOffer(req, res) {
-    const body = req.body
+    let body = req.body
     Offer.create(body, function (err, _) {
         if (err) return error(err, res)
+        body.haveSpatialAudio = body.haveSpatialAudio ? body.haveSpatialAudio : false
         res.writeHead(201)
-        res.end('{"status": "success"}')
+        res.end(JSON.stringify(body))
     })
 }
 

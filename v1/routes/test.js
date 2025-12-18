@@ -6,7 +6,7 @@ export default router
 
 router.all('/', function (req, res) {
   db.query('SELECT * FROM accounts' ,[],function(err,rest){
-    console.log(rest)
+    console.log(new Date())
   })
   res.end('test')
 })
