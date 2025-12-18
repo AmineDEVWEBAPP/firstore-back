@@ -34,7 +34,7 @@ router.put('/:id', [authJWT, strictArgs({
     'maximumDownloadDevices': 'number'
 }, false), emptyBody], updateOffer)
 
-router.delete('/:id', authJWT, deleteOffer)
+router.delete('/:id', [authJWT, strictArgs({ 'deleteAccounts': 'boolean' }, false)], deleteOffer)
 
 router.get('/', getOffers)
 

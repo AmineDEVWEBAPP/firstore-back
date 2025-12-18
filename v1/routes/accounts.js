@@ -6,7 +6,9 @@ import strictArgs from '../middlewares/strictArgs.js'
 const router = express.Router()
 export default router
 
-router.post('/', [authJWT, strictArgs({ 'offerId': 'number', 'email': 'string', 'password': 'string' }
-)], createAccount)
+router.post('/', [authJWT,
+    strictArgs({ 'email': 'string', 'password': 'string' },
+        strictArgs({ 'offerId': 'number' }, false)
+    )], createAccount)
 
 router.delete('/:id', authJWT, deleteAccount)

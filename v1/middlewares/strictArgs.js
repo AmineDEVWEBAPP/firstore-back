@@ -32,7 +32,7 @@ function missingArs(req, args) {
 function strictType(req, argsType) {
     let invalidArgs = []
     for (const key in argsType) {
-        if (req.body[key] !== undefined && typeof req.body[key] !== argsType[key]) {
+        if (req.body && req.body[key] !== undefined && typeof req.body[key] !== argsType[key]) {
             invalidArgs.push(key)
         }
     }

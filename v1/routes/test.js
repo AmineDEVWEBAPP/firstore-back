@@ -4,6 +4,6 @@ const router = express.Router()
 export default router
 
 router.all('/', function (req, res) {
-  console.log(req.body)
+  console.log(typeof true)
   res.end('test')
 })

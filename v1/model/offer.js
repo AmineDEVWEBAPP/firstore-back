@@ -9,7 +9,7 @@ Offer.columns = ['name', 'price', 'price_currency', 'quality', 'resulotion', 'ha
 Offer.create = function (data, callback) {
     const { keys, values } = dataToQuery.create(data, Offer.columns)
     const query = `INSERT INTO offers (${keys}) VALUES(${values})`
-    db.query(query, values, function (err, result) {
+    db.query(query, Object.values(data), function (err, result) {
         if (err) return callback(err)
         callback(null, result)
     })
