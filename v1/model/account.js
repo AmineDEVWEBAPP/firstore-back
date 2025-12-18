@@ -31,3 +31,11 @@ Account.update = function (id, data, callback) {
         callback(null, result)
     })
 }
+
+Account.findAll=function(callback){
+    const query='SELECT * FROM accounts'
+    db.query(query,[],function(err,resutls){
+        if(err)return callback(err)
+            callback(null,resutls)
+    })
+}

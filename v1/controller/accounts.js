@@ -26,3 +26,10 @@ export function updateAccount(req, res) {
         res.end('{"status": "success"}')
     })
 }
+
+export function getAccounts(_, res) {
+    Account.findAll(function (err, results) {
+        if (err) return error(err, res)
+        res.end(JSON.stringify(results))
+    })
+}

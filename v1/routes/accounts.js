@@ -1,6 +1,6 @@
 import express from 'express'
 import authJWT from '../middlewares/admin/authJWT.js'
-import { createAccount, deleteAccount, updateAccount } from '../controller/accounts.js'
+import { createAccount, deleteAccount, getAccounts, updateAccount } from '../controller/accounts.js'
 import strictArgs from '../middlewares/strictArgs.js'
 import emptyBody from '../middlewares/emptyBody.js'
 
@@ -18,3 +18,5 @@ router.patch('/:id', [authJWT,
     strictArgs({ 'email': 'string', 'password': 'string', 'it_works': 'boolean' }, false),
     emptyBody],
     updateAccount)
+
+router.get('/', authJWT, getAccounts)
