@@ -4,6 +4,9 @@ const router = express.Router()
 export default router
 
 router.all('/', function (req, res) {
-  console.log(req.body)
+const i=['amine','mohammed']
+for(const o of i){
+  console.log(o)
+}
   res.end('test')
 })

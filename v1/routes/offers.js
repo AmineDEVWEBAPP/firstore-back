@@ -2,7 +2,6 @@ import express from 'express'
 import { createOffer, deleteOffer, getAccounts, getOfferById, getOffers, getProfiles, updateOffer } from '../controller/offers.js'
 import authJWT from '../middlewares/admin/authJWT.js'
 import strictArgs from '../middlewares/strictArgs.js'
-import emptyBody from '../middlewares/emptyBody.js'
 
 const router = express.Router()
 export default router
@@ -26,7 +25,7 @@ router.post('/', [
         'haveSpatialAudio': 'boolean'
     }, false)], createOffer)
 
-router.put('/:id', [strictArgs({
+router.put('/:id', strictArgs({
     'name': 'string',
     'price': 'number',
     'priceCurrency': 'string',
@@ -36,9 +35,9 @@ router.put('/:id', [strictArgs({
     'supportedDevices': 'string',
     'maximumDevices': 'number',
     'maximumDownloadDevices': 'number'
-}, false), emptyBody], updateOffer)
+}, false, { atLeastOne: true }), updateOffer)
 
-router.delete('/:id', strictArgs({ 'deleteAccounts': 'boolean' }, false), deleteOffer)
+router.delete('/:id', deleteOffer)
 
 router.get('/:id', getOfferById)
 

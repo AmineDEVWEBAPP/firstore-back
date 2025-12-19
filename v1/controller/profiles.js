@@ -7,3 +7,26 @@ export function getProfiles(_, res) {
         res.end(JSON.stringify(results))
     })
 }
+
+export function createProfile(req, res) {
+    const body = req.body
+    Profile.create(body, function (err, result) {
+        if (err && err.errno === 1452) return error({ 'mess': 'Account not found', 'statusCode': 404 }, res)
+        if (err) return error(err, res)
+        body.id = result.insertId
+        body.used = false
+        res.writeHead(201)
+        res.end(JSON.stringify(body))
+    })
+}
+
+export function updateProfile(req, res) {
+    const id = parseInt(req.params.id)
+    if (req.body.pinCode) req.body.used = false
+    Profile.update(id, req.body, function (err, result) {
+        if (err) return error(err, result)
+        if (result.affectedRows === 0) return error({ 'mess': 'Profile not found', 'statusCode': 404 }, res)
+        res.writeHead(204)
+        res.end()
+    })
+}
