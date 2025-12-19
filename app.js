@@ -8,6 +8,8 @@ import helmet from 'helmet'
 import cors from 'cors'
 import accountsRoute from './v1/routes/accounts.js'
 import checkoutRoute from './v1/routes/checkout.js'
+import profilesRoute from './v1/routes/profiles.js'
+import authJWT from './v1/middlewares/admin/authJWT.js'
 
 const app = express()
 
@@ -38,9 +40,11 @@ app.use('/api/v1/admin', isAdmin, adminRoute)
 
 app.use('/api/v1/offers', offersRoute)
 
-app.use('/api/v1/accounts', accountsRoute)
+app.use('/api/v1/accounts',authJWT, accountsRoute)
 
-app.use('/api/v1/checkout',checkoutRoute)
+app.use('/api/v1/checkout', checkoutRoute)
+
+app.use('/api/v1/profiles', authJWT, profilesRoute)
 
 app.use(function (_, res) {
     res.writeHead(404)

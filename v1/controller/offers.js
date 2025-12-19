@@ -3,8 +3,9 @@ import error from '../utils/error.js'
 
 export function createOffer(req, res) {
     let body = req.body
-    Offer.create(body, function (err, _) {
+    Offer.create(body, function (err, result) {
         if (err) return error(err, res)
+        body.id = result.insertId
         body.haveSpatialAudio = body.haveSpatialAudio ? body.haveSpatialAudio : false
         res.writeHead(201)
         res.end(JSON.stringify(body))
