@@ -53,3 +53,12 @@ export function getAccountById(req, res) {
         res.end(JSON.stringify(results[0]))
     })
 }
+
+export function getProfiles(req, res) {
+    const id = req.params.id
+    Account.findProfiles(id, function (err, results) {
+        if (err) return error(err, res)
+        if (results.length === 0) return error({ 'mess': 'Account not found', 'statusCode': 404 })
+        res.end(JSON.stringify(results))
+    })
+}

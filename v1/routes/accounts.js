@@ -1,6 +1,6 @@
 import express from 'express'
 import authJWT from '../middlewares/admin/authJWT.js'
-import { createAccount, deleteAccount, getAccountById, getAccounts, updateAccount } from '../controller/accounts.js'
+import { createAccount, deleteAccount, getAccountById, getAccounts, getProfiles, updateAccount } from '../controller/accounts.js'
 import strictArgs from '../middlewares/strictArgs.js'
 import emptyBody from '../middlewares/emptyBody.js'
 
@@ -24,3 +24,5 @@ router.patch('/:id', [
 router.get('/', getAccounts)
 
 router.get('/:id', getAccountById)
+
+router.get('/:id/profiles',getProfiles)

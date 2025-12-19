@@ -47,3 +47,11 @@ Account.findById = function (id, callback) {
         callback(null, results)
     })
 }
+
+Account.findProfiles = function (id, callback) {
+    const query = 'SELECT * FROM profiles WHERE account_id = ?'
+    db.query(query, [id], function (err, results) {
+        if (err) return callback(err)
+        callback(null, results)
+    })
+}
