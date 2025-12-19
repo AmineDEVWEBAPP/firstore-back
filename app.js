@@ -7,7 +7,7 @@ import offersRoute from './v1/routes/offers.js'
 import helmet from 'helmet'
 import cors from 'cors'
 import accountsRoute from './v1/routes/accounts.js'
-import paymentRoute from './v1/routes/payment.js'
+import checkoutRoute from './v1/routes/checkout.js'
 
 const app = express()
 
@@ -40,7 +40,7 @@ app.use('/api/v1/offers', offersRoute)
 
 app.use('/api/v1/accounts', accountsRoute)
 
-app.use('/api/v1/payment',paymentRoute)
+app.use('/api/v1/checkout',checkoutRoute)
 
 app.use(function (_, res) {
     res.writeHead(404)
