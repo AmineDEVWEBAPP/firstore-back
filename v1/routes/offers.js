@@ -1,5 +1,5 @@
 import express from 'express'
-import { createOffer, deleteOffer, getAccounts, getOfferById, getOffers, updateOffer } from '../controller/offers.js'
+import { createOffer, deleteOffer, getAccounts, getOfferById, getOffers, getProfiles, updateOffer } from '../controller/offers.js'
 import authJWT from '../middlewares/admin/authJWT.js'
 import strictArgs from '../middlewares/strictArgs.js'
 import emptyBody from '../middlewares/emptyBody.js'
@@ -7,7 +7,11 @@ import emptyBody from '../middlewares/emptyBody.js'
 const router = express.Router()
 export default router
 
-router.post('/', [authJWT,
+router.get('/', getOffers)
+
+router.use(authJWT)
+
+router.post('/', [
     strictArgs({
         'name': 'string',
         'price': 'number',
@@ -22,7 +26,7 @@ router.post('/', [authJWT,
         'haveSpatialAudio': 'boolean'
     }, false)], createOffer)
 
-router.put('/:id', [authJWT, strictArgs({
+router.put('/:id', [strictArgs({
     'name': 'string',
     'price': 'number',
     'priceCurrency': 'string',
@@ -34,10 +38,10 @@ router.put('/:id', [authJWT, strictArgs({
     'maximumDownloadDevices': 'number'
 }, false), emptyBody], updateOffer)
 
-router.delete('/:id', [authJWT, strictArgs({ 'deleteAccounts': 'boolean' }, false)], deleteOffer)
-
-router.get('/', getOffers)
+router.delete('/:id', strictArgs({ 'deleteAccounts': 'boolean' }, false), deleteOffer)
 
 router.get('/:id', getOfferById)
 
 router.get('/:id/accounts', getAccounts)
+
+router.get('/:id/profiles', getProfiles)
