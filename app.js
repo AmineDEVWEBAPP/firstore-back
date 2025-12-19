@@ -7,6 +7,7 @@ import offersRoute from './v1/routes/offers.js'
 import helmet from 'helmet'
 import cors from 'cors'
 import accountsRoute from './v1/routes/accounts.js'
+import paymentRoute from './v1/routes/payment.js'
 
 const app = express()
 
@@ -38,6 +39,8 @@ app.use('/api/v1/admin', isAdmin, adminRoute)
 app.use('/api/v1/offers', offersRoute)
 
 app.use('/api/v1/accounts', accountsRoute)
+
+app.use('/api/v1/payment',paymentRoute)
 
 app.use(function (_, res) {
     res.writeHead(404)
