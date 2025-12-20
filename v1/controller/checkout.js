@@ -1,6 +1,7 @@
 import db from '../config/db.js'
 import error from '../utils/error.js'
 import crypto from 'crypto'
+import { createUser } from './users.js'
 
 function getProfileUrl(offerId, callback) {
     const query = `SELECT p.payment_url
@@ -40,5 +41,23 @@ export function startPayment(req, res) {
             url += `?pay_token=${token}`
             res.end(JSON.stringify({ 'url': url }))
         })
+    })
+}
+
+
+export function finishPayment(req, res) {
+    const body = req.body
+    if (body.refunded === 'true')
+        return error({ 'mess': 'Subscription refunded', 'statusCode': 400 }, res)
+    const profileId = parseInt(body.product_name.split('=')[1])
+    const token = body.url_params.pay_token
+    const query = 'SELECT phone FROM pending_payment WHERE token = ?'
+    db.query(query, [token], function (err, results) {
+        if (err) return error(err, res)
+        const phone = results[0].phone
+        body.profileId = profileId
+        body.phone = phone
+        req.body = body
+        createUser(req, res)
     })
 }

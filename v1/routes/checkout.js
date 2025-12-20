@@ -1,5 +1,5 @@
 import express from "express";
-import { getUrl, startPayment } from "../controller/checkout.js";
+import { finishPayment, getUrl, startPayment } from "../controller/checkout.js";
 import strictArgs from "../middlewares/strictArgs.js";
 import error from "../utils/error.js";
 import validator from 'validator'
@@ -25,3 +25,5 @@ router.post('/start',
         }
     ],
     startPayment)
+
+    router.post('/payment-webhook',finishPayment)

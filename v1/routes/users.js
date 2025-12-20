@@ -9,11 +9,6 @@ import availableProfile from '../middlewares/user/availableProfile.js';
 const router = express.Router()
 export default router
 
-router.use('/webhook', function (req, res) {
-    console.log(req.body)
-    res.end()
-})
-
 router.use(authJWT)
 
 router.post('/', [
