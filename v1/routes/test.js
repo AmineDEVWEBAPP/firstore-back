@@ -1,12 +1,10 @@
 import express from 'express'
+import validator from 'validator'
 
 const router = express.Router()
 export default router
 
 router.all('/', function (req, res) {
-const i=['amine','mohammed']
-for(const o of i){
-  console.log(o)
-}
+console.log(isNaN("kkk"))
   res.end('test')
 })

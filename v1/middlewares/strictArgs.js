@@ -1,6 +1,6 @@
 import error from "../utils/error.js"
 
-export default function strictArgs(args, required = true, { atLeastOne = false }={}) {
+export default function strictArgs(args, required = true, { atLeastOne = false } = {}) {
     return function (req, res, next) {
         let err = null
         if (required) {
@@ -22,7 +22,8 @@ function missingArs(req, args) {
     let missingArgs = []
     for (const arg of argsKey) {
         if (req.body) {
-            if (!req.body[arg]) {
+            const rKey = req.body[arg]
+            if (rKey === undefined || rKey === null) {
                 missingArgs.push(arg)
             }
         } else {
