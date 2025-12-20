@@ -1,18 +1,57 @@
+import db from '../config/db.js';
 import User from '../model/user.js';
 import error from '../utils/error.js';
 
 export function createUser(req, res) {
+    function commitTransaction(conn) {
+        conn.commit(err => {
+            if (err) return conn.rollback(function () {
+                conn.release()
+                error(err, res)
+            })
+            conn.release()
+            res.writeHead(201)
+            res.end(JSON.stringify(body))
+        })
+    }
     const body = req.body
     if (!body.active) body.lastPayTime = null
-    User.create(body, function (err, results) {
-        if (err && err.errno === 1452) return error({ 'mess': 'Profile not found', 'statusCode': 404 }, res)
+
+    db.pool.getConnection(function (err, conn) {
         if (err) return error(err, res)
-        body.id = results.insertId
-        body.createdAt = new Date()
-        if (body.active) body.lastPayTime = new Date()
-        if (body.active === undefined) body.active = false
-        res.writeHead(201)
-        res.end(JSON.stringify(body))
+
+        conn.beginTransaction(err => {
+            if (err) {
+                conn.release()
+                return error(err, res)
+            }
+
+            // insert user 
+            User.create(conn, body, function (err, results) {
+                if (err) return conn.rollback(function () {
+                    conn.release()
+                    error(err, res)
+                })
+                body.id = results.insertId
+                body.createdAt = new Date()
+                if (body.active) body.lastPayTime = new Date()
+                if (!body.active) body.active = false
+
+                if (body.active) {
+                    // update profile
+                    const query = 'UPDATE profiles SET used = true WHERE id = ?'
+                    db.query(conn, query, [body.profileId], function (err) {
+                        if (err) return conn.rollback(function () {
+                            conn.release()
+                            error(err, res)
+                        })
+                        commitTransaction(conn)
+                    })
+                } else {
+                    commitTransaction(conn)
+                }
+            })
+        })
     })
 }
 

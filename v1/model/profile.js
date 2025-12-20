@@ -11,6 +11,13 @@ Profile.findAll = function (callback) {
     })
 }
 
+Profile.findById = function (id, callback) {
+    const query = 'SELECT * FROM profiles WHERE id = ?'
+    db.query(query, [id], function (err, results) {
+        callback(err, results)
+    })
+}
+
 Profile.columns = ['account_id', 'name', 'pin_code', 'payment_url']
 
 Profile.create = function (data, callback) {
