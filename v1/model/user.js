@@ -4,12 +4,12 @@ import db from '../config/db.js'
 const User = {}
 export default User
 
-User.columns = ['profile_id', 'email', 'phone', 'type', 'active', 'last_pay_time']
+User.columns = ['profile_id', 'email', 'phone', 'type', 'last_pay_time']
 
-User.create = function (conn,data, callback) {
+User.create = function (conn, data, callback) {
     const { keys, values } = dataToSql.create(data, User.columns)
     const query = `INSERT INTO users (${keys}) VALUES(${values})`
-    db.query(conn,query, Object.values(data), function (err, results) {
+    db.query(conn, query, Object.values(data), function (err, results) {
         callback(err, results)
     })
 }

@@ -5,6 +5,6 @@ const router = express.Router()
 export default router
 
 router.all('/', function (req, res) {
-console.log(validator.isISO8601('2025-12-1'))
+console.log(req.body)
   res.end('test')
 })

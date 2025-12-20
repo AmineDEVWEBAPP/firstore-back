@@ -3,19 +3,7 @@ import User from '../model/user.js';
 import error from '../utils/error.js';
 
 export function createUser(req, res) {
-    function commitTransaction(conn) {
-        conn.commit(err => {
-            if (err) return conn.rollback(function () {
-                conn.release()
-                error(err, res)
-            })
-            conn.release()
-            res.writeHead(201)
-            res.end(JSON.stringify(body))
-        })
-    }
     const body = req.body
-    if (!body.active) body.lastPayTime = null
 
     db.pool.getConnection(function (err, conn) {
         if (err) return error(err, res)
@@ -34,22 +22,25 @@ export function createUser(req, res) {
                 })
                 body.id = results.insertId
                 body.createdAt = new Date()
-                if (body.active) body.lastPayTime = new Date()
-                if (!body.active) body.active = false
+                body.lastPayTime = new Date()
 
-                if (body.active) {
-                    // update profile
-                    const query = 'UPDATE profiles SET used = true WHERE id = ?'
-                    db.query(conn, query, [body.profileId], function (err) {
+                // update profile
+                const query = 'UPDATE profiles SET used = true WHERE id = ?'
+                db.query(conn, query, [body.profileId], function (err) {
+                    if (err) return conn.rollback(function () {
+                        conn.release()
+                        error(err, res)
+                    })
+                    conn.commit(err => {
                         if (err) return conn.rollback(function () {
                             conn.release()
                             error(err, res)
                         })
-                        commitTransaction(conn)
+                        conn.release()
+                        res.writeHead(201)
+                        res.end(JSON.stringify(body))
                     })
-                } else {
-                    commitTransaction(conn)
-                }
+                })
             })
         })
     })
@@ -57,7 +48,8 @@ export function createUser(req, res) {
 
 export function updateUser(req, res) {
     const id = req.params.id
-    User.update(id, req.body, function (err, results) {
+    const body = req.body
+    User.update(id, body, function (err, results) {
         if (err) return error(err, res)
         if (results.affectedRows === 0)
             return error({ 'mess': 'User not found', 'statusCode': 404 }, res)

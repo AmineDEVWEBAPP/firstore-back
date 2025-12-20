@@ -3,6 +3,7 @@ import error from "../../utils/error.js"
 
 export default function availableProfile(req, res, next) {
     const { profileId } = req.body
+    if (profileId === undefined) return next()
     Profile.findById(profileId, function (err, results) {
         if (err) return error(err, res)
         if (results.length === 0)
