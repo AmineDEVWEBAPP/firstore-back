@@ -3,16 +3,43 @@ import error from '../utils/error.js';
 
 export function createUser(req, res) {
     const body = req.body
-    if (!body.active) body.payTime = null
+    if (!body.active) body.lastPayTime = null
     User.create(body, function (err, results) {
         if (err && err.errno === 1452) return error({ 'mess': 'Profile not found', 'statusCode': 404 }, res)
         if (err) return error(err, res)
         body.id = results.insertId
         body.createdAt = new Date()
-        if (body.active) body.payTime = new Date()
+        if (body.active) body.lastPayTime = new Date()
         if (body.active === undefined) body.active = false
         res.writeHead(201)
         res.end(JSON.stringify(body))
+    })
+}
+
+export function updateUser(req, res) {
+    const id = req.params.id
+    User.update(id, req.body, function (err, results) {
+        if (err) return error(err, res)
+        if (results.affectedRows === 0)
+            return error({ 'mess': 'User not found', 'statusCode': 404 }, res)
+        res.writeHead(204)
+        res.end()
+    })
+}
+
+export function getUsers(_, res) {
+    User.findAll(function (err, results) {
+        if (err) return error(err, res)
+        res.end(JSON.stringify(results))
+    })
+}
+
+export function getUserById(req, res) {
+    const id = req.params.id
+    User.findById(id, function (err, results) {
+        if (err) return error(err, res)
+        if (results.length === 0) return error({ 'mess': 'User not found', 'statusCode': 404 }, res)
+        res.end(JSON.stringify(results[0]))
     })
 }
 
