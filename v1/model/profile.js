@@ -36,3 +36,32 @@ Profile.update = function (id, data, callback) {
         callback(err, result)
     })
 }
+
+Profile.getAvailableByOfferId = function (offerId, callback) {
+    const query = `SELECT p.payment_url
+                       FROM profiles p
+                       JOIN accounts a ON p.account_id = a.id
+                       WHERE a.it_works = 1
+                       AND p.used = 0
+                       AND a.offer_id = ?
+                       LIMIT 1`
+    db.query(query, [offerId], function (err, results) {
+        callback(err, results)
+    })
+}
+
+Profile.getAvailableByOfferName = function (offerName, callback) {
+    const query = `SELECT 
+                   profiles.payment_url
+                   FROM profiles
+                   JOIN accounts ON accounts.id = profiles.account_id
+                   JOIN offers   ON offers.id = accounts.offer_id
+                   WHERE accounts.it_works = 1
+                   AND profiles.used = 0
+                   AND offers.name = ?
+                   LIMIT 1;
+                   `
+    db.query(query, [offerName], function (err, results) {
+        callback(err, results)
+    })
+}

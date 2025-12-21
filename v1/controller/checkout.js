@@ -5,22 +5,9 @@ import { createUser } from './users.js'
 import User from '../model/user.js'
 import Profile from '../model/profile.js'
 
-function getProfileUrl(offerId, callback) {
-    const query = `SELECT p.payment_url
-                   FROM profiles p
-                   JOIN accounts a ON p.account_id = a.id
-                   WHERE a.it_works = 1
-                   AND p.used = 0
-                   AND a.offer_id = ?
-                   LIMIT 1`
-    db.query(query, [offerId], function (err, results) {
-        callback(err, results)
-    })
-}
-
 export function getUrl(req, res) {
     const offerId = parseInt(req.query.offerId)
-    getProfileUrl(offerId, function (err, results) {
+    Profile.getAvailableByOfferId(offerId, function (err, results) {
         if (err) return error(err, res)
         if (results.length === 0)
             return error({ 'mess': 'Payment url not found', 'statusCode': 404 }, res)
