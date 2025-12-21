@@ -2,6 +2,8 @@ import db from '../config/db.js'
 import error from '../utils/error.js'
 import crypto from 'crypto'
 import { createUser } from './users.js'
+import User from '../model/user.js'
+import Profile from '../model/profile.js'
 
 function getProfileUrl(offerId, callback) {
     const query = `SELECT p.payment_url
@@ -47,17 +49,53 @@ export function startPayment(req, res) {
 
 export function finishPayment(req, res) {
     const body = req.body
-    if (body.refunded === 'true')
-        return error({ 'mess': 'Subscription refunded', 'statusCode': 400 }, res)
     const profileId = parseInt(body.product_name.split('=')[1])
-    const token = body.url_params.pay_token
-    const query = 'SELECT phone FROM pending_payment WHERE token = ?'
-    db.query(query, [token], function (err, results) {
-        if (err) return error(err, res)
-        const phone = results[0].phone
-        body.profileId = profileId
-        body.phone = phone
-        req.body = body
-        createUser(req, res)
-    })
+    if (body.price === '0')
+        return error({ 'mess': 'Subscription refunded', 'statusCode': 400 }, res)
+    // if user finish subscription and i sent it to resupscibe 
+    const oldUser = body.url_params?.user_id != null
+    if (oldUser) {
+        const userId = parseInt(body.url_params.user_id)
+        User.update(userId,
+            { 'lastPayTime': new Date(), 'profileId': profileId },
+            function (err) {
+                if (err) return error(err, res)
+                Profile.update(profileId,
+                    { 'used': true },
+                    function (err) {
+                        if (err) return error(err, res)
+                        res.writeHead(204)
+                        res.end()
+                    })
+            })
+    } else {
+        const query = 'SELECT * FROM users WHERE profile_id = ?'
+        db.query(query, [profileId], function (err, results) {
+            if (err) return error(err, res)
+            // check if is new user
+            if (results.length === 0) {
+                const token = body.url_params.pay_token
+                const query = 'SELECT phone FROM pending_payment WHERE token = ?'
+                db.query(query, [token], function (err, results) {
+                    if (err) return error(err, res)
+                    const phone = results[0].phone
+                    body.profileId = profileId
+                    body.phone = phone
+                    req.body = body
+                    createUser(req, res)
+                })
+            } else {
+                // if is old user and is subscription request for every month
+                User.update(
+                    results[0]['user_id'],
+                    { 'lastPayTime': new Date() },
+                    function (err) {
+                        if (err) return error(err, res)
+                        res.writeHead(204)
+                        res.end()
+                    }
+                )
+            }
+        })
+    }
 }
