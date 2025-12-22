@@ -1,5 +1,5 @@
 import express from 'express'
-import { createUser, getUserById, getUsers, sendEmail, updateUser } from '../controller/users.js'
+import { createUser, getUserById, getUsers, sendUserEmail, updateUser } from '../controller/users.js'
 import authJWT from "../middlewares/admin/authJWT.js";
 import strictArgs from '../middlewares/strictArgs.js'
 import validUserParams from '../middlewares/user/validUserParams.js';
@@ -12,8 +12,8 @@ export default router
 router.use(authJWT)
 
 router.post('/', [
-    strictArgs({ 'profileId': 'number', 'phone': 'string', 'type': 'string' }),
-    strictArgs({ 'email': 'string' }, false),
+    strictArgs({ 'profileId': 'number', 'phone': 'string' }),
+    strictArgs({ 'email': 'string', 'type': 'string' }, false),
     validUserParams,
     availableProfile
 ], createUser)
@@ -37,4 +37,4 @@ router.get('/', getUsers)
 
 router.get('/:id', getUserById)
 
-router.post('/:id/notice/email', sendEmail)
+router.post('/:id/notice/email', sendUserEmail)

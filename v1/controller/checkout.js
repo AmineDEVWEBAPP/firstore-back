@@ -4,6 +4,8 @@ import crypto from 'crypto'
 import { createUser } from './users.js'
 import User from '../model/user.js'
 import Profile from '../model/profile.js'
+import sendEmail from '../utils/sendEmail.js'
+import { newAccountInfoEmail } from './emails.js'
 
 export function getUrl(req, res) {
     const offerId = parseInt(req.query.offerId)
@@ -51,8 +53,24 @@ export function finishPayment(req, res) {
                     { 'used': true },
                     function (err) {
                         if (err) return error(err, res)
-                        res.writeHead(204)
-                        res.end()
+                        User.findById(userId, function (err, results) {
+                            if (err) return error(err, res)
+                            const username = body.email.split('@')[0]
+                            const user = results[0]
+                            sendEmail(user.email,
+                                newAccountInfoEmail({
+                                    'username': username,
+                                    'email': user.account_email,
+                                    'password': user.account_password,
+                                    'profile': user.profile_name,
+                                    'pinCode': user.pinCode
+                                }),
+                                function (err) {
+                                    if (err) return error(err, res)
+                                    res.writeHead(204)
+                                    res.end()
+                                })
+                        })
                     })
             })
     } else {
@@ -65,6 +83,7 @@ export function finishPayment(req, res) {
                 const query = 'SELECT phone FROM pending_payment WHERE token = ?'
                 db.query(query, [token], function (err, results) {
                     if (err) return error(err, res)
+                    body.type = 'card'
                     const phone = results[0].phone
                     body.profileId = profileId
                     body.phone = phone
@@ -74,7 +93,7 @@ export function finishPayment(req, res) {
             } else {
                 // if is old user and is subscription request for every month
                 User.update(
-                    results[0]['user_id'],
+                    results[0]['id'],
                     { 'lastPayTime': new Date() },
                     function (err) {
                         if (err) return error(err, res)
