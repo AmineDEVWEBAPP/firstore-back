@@ -106,6 +106,8 @@ export function sendUserEmail(req, res) {
         if (results.length === 0)
             return error({ 'mess': 'User not found', 'statusCode': 404 }, res)
         const user = results[0]
+        if (user.type === 'whatsapp')
+            return error({ 'mess': 'User type is whatsapp he not have an email', 'statusCode': 400 }, res)
         const email = user['email']
         const name = email.split('@')[0]
         Profile.getAvailableByOfferName(user.offer_name, function (err, results) {

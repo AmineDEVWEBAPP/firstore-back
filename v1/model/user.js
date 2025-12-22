@@ -59,3 +59,10 @@ User.findById = function (id, callback) {
         callback(err, results)
     })
 }
+
+User.findByProfileId = function (profileId, callback) {
+    const query = 'SELECT * FROM users WHERE profile_id = ?'
+    db.query(query, [profileId], function (err, results) {
+        callback(err, results)
+    })
+}

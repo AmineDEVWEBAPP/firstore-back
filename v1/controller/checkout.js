@@ -19,7 +19,7 @@ export function getUrl(req, res) {
 
 export function startPayment(req, res) {
     const offerId = parseInt(req.body.offerId)
-    getProfileUrl(offerId, function (err, results) {
+    Profile.getAvailableByOfferId(offerId, function (err, results) {
         if (err) return error(err, res)
         if (results.length === 0)
             return error({ 'mess': 'Payment url not found', 'statusCode': 404 }, res)
@@ -39,7 +39,7 @@ export function startPayment(req, res) {
 export function finishPayment(req, res) {
     const body = req.body
     const profileId = parseInt(body.product_name.split('=')[1])
-    if (body.price === '0')
+    if (!body.price || body.price === '0')
         return error({ 'mess': 'Subscription refunded', 'statusCode': 400 }, res)
     // if user finish subscription and i sent it to resupscibe 
     const oldUser = body.url_params?.user_id != null
@@ -63,7 +63,7 @@ export function finishPayment(req, res) {
                                     'email': user.account_email,
                                     'password': user.account_password,
                                     'profile': user.profile_name,
-                                    'pinCode': user.pinCode
+                                    'pinCode': user.profile_pin_code
                                 }),
                                 function (err) {
                                     if (err) return error(err, res)
@@ -74,8 +74,7 @@ export function finishPayment(req, res) {
                     })
             })
     } else {
-        const query = 'SELECT * FROM users WHERE profile_id = ?'
-        db.query(query, [profileId], function (err, results) {
+        User.findByProfileId(profileId, function (err, results) {
             if (err) return error(err, res)
             // check if is new user
             if (results.length === 0) {
@@ -84,9 +83,8 @@ export function finishPayment(req, res) {
                 db.query(query, [token], function (err, results) {
                     if (err) return error(err, res)
                     body.type = 'card'
-                    const phone = results[0].phone
+                    body.phone = results[0].phone
                     body.profileId = profileId
-                    body.phone = phone
                     req.body = body
                     createUser(req, res)
                 })
