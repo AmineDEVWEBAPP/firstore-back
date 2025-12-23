@@ -7,7 +7,7 @@ export default function isAdmin(req, res, next) {
     if (!email) return notFound(res)
     Admin.findByEmail(email, function (err, result) {
         if (err) return notFound(res)
-        const adminEmail = result['email']
+        const adminEmail = result[0]['email']
         if (adminEmail !== email) return notFound(res)
         next()
     })

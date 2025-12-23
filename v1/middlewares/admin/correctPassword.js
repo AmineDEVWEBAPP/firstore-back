@@ -7,8 +7,8 @@ export default function correctPassword(req, res, next) {
     Admin.findByEmail(email, function (err, result) {
         if (err) return notFound(res)
         if (result.length === 0) return notFound(res)
-        const hash = result['password_hash']
-        const salt = result['password_salt']
+        const hash = result[0]['password_hash']
+        const salt = result[0]['password_salt']
         if (!verifyPassword(password, salt, hash)) return notFound(res)
         next()
     })
