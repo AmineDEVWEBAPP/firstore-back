@@ -38,3 +38,17 @@ export function check(_, res) {
     res.writeHead(204)
     res.end()
 }
+
+export function getAdmin(req,res){
+    const token = req.headers['cookie'].split(';')[0].split('=')[1]
+    const decoded=jwt.decode(token)
+    Admin.findByEmail(decoded.email,function(err,results){
+        if(err)return error(err,res)
+            const admin=results[0]
+        const payload={
+            'email':admin.email,
+            'name':admin.full_name
+        }
+        res.end(JSON.stringify(payload))
+    })
+}

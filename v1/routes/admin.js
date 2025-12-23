@@ -1,6 +1,6 @@
 import express from 'express'
 import allowMethods from '../middlewares/allowedMethods.js'
-import { adminLogin, check } from '../controller/admin.js'
+import { adminLogin, check, getAdmin } from '../controller/admin.js'
 import strictArgs from '../middlewares/strictArgs.js'
 import correctPassword from '../middlewares/admin/correctPassword.js'
 import loginLimiter from '../middlewares/loginLimiter.js'
@@ -11,7 +11,7 @@ import authJWT from '../middlewares/admin/authJWT.js'
 const router = express.Router()
 export default router
 
-router.use(allowMethods(['POST']))
+router.use(allowMethods(['POST','GET']))
 
 router.post('/login', [
     loginLimiter,
@@ -22,3 +22,5 @@ router.post('/login', [
 ], adminLogin)
 
 router.post('/logged', authJWT, check)
+
+router.get('/',authJWT,getAdmin)
