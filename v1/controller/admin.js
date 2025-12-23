@@ -33,3 +33,8 @@ function getExpiresFromToken(token) {
     const expiresAt = new Date(decoded.exp * 1000)
     return expiresAt
 }
+
+export function check(_, res) {
+    res.writeHead(204)
+    res.end()
+}

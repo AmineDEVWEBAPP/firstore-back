@@ -2,7 +2,6 @@ import env from './v1/config/env.js'
 import express from 'express'
 import testRouter from './v1/routes/test.js'
 import adminRoute from './v1/routes/admin.js'
-import isAdmin from './v1/middlewares/admin/isAdmin.js'
 import offersRoute from './v1/routes/offers.js'
 import helmet from 'helmet'
 import cors from 'cors'
@@ -37,7 +36,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/v1/test', testRouter)
 
-app.use('/api/v1/admin', isAdmin, adminRoute)
+app.use('/api/v1/admin', adminRoute)
 
 app.use('/api/v1/offers', offersRoute)
 
