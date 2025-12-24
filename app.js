@@ -10,6 +10,7 @@ import checkoutRoute from './v1/routes/checkout.js'
 import profilesRoute from './v1/routes/profiles.js'
 import authJWT from './v1/middlewares/admin/authJWT.js'
 import usersRoute from './v1/routes/users.js'
+import cookieParser from 'cookie-parser'
 
 const app = express()
 
@@ -33,6 +34,8 @@ app.use(cors({
 app.use(express.json())
 
 app.use(express.urlencoded({ extended: true }));
+
+app.use(cookieParser())
 
 app.use('/api/v1/test', testRouter)
 

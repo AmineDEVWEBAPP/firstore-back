@@ -4,9 +4,7 @@ import env from "../../config/env.js"
 
 export default function authJWT(req, res, next) {
     if (!req.headers['cookie']) return notFound(res)
-    const tokenCookie = req.headers['cookie'].split(';')[0]
-    if (!tokenCookie) return notFound(res)
-    const token = tokenCookie.split('=')[1]
+    const token = req.cookies.adminToken
     try {
         const decoded = jwt.verify(token, env.JWT_SECRET)
         if (decoded['role'] !== 'admin') return notFound(res)

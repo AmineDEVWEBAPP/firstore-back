@@ -5,15 +5,16 @@ export default function isAdmin(req, res, next) {
     if (!req.body) return notFound(res)
     const email = req.body.email
     if (!email) return notFound(res)
-    Admin.findByEmail(email, function (err, result) {
+    Admin.findByEmail(email, function (err, results) {
         if (err) return notFound(res)
-        const adminEmail = result[0]['email']
+        if (results.length === 0) return notFound(res)
+        const adminEmail = results[0]['email']
         if (adminEmail !== email) return notFound(res)
         next()
     })
 }
 
 
-function notFound(res){
-    error({'mess':'not found','statusCode':404},res)
+function notFound(res) {
+    error({ 'mess': 'not found', 'statusCode': 404 }, res)
 }
