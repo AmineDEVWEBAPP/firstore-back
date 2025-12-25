@@ -34,7 +34,15 @@ Offer.delete = function (id, callback) {
 }
 
 Offer.findAll = function (callback) {
-    const query = 'SELECT * FROM offers'
+    const query = `
+    SELECT
+    o.*,
+    COUNT(p.id) AS used_profiles_count
+    FROM offers o
+    LEFT JOIN accounts a ON a.offer_id = o.id
+    LEFT JOIN profiles p ON p.account_id = a.id AND p.used = 1
+    GROUP BY o.id;
+    `
     db.query(query, [], function (err, results) {
         if (err) return callback(err)
         callback(null, results)
@@ -42,7 +50,15 @@ Offer.findAll = function (callback) {
 }
 
 Offer.findByID = function (id, callback) {
-    const query = 'SELECT * FROM offers WHERE id = ?'
+    const query = `
+    SELECT
+    o.*,
+    COUNT(p.id) AS used_profiles_count
+    FROM offers o
+    LEFT JOIN accounts a ON a.offer_id = o.id
+    LEFT JOIN profiles p ON p.account_id = a.id AND p.used = 1
+    WHERE o.id = ?;
+    `
     db.query(query, [id], function (err, result) {
         if (err) return callback(err)
         callback(null, result)
