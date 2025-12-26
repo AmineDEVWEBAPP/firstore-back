@@ -16,7 +16,7 @@ router.post('/', [
         'price': 'number',
         'priceCurrency': 'string',
         'quality': 'string',
-        'resulotion': 'string',
+        'resolution': 'string',
         'supportedDevices': 'string',
         'maximumDevices': 'number',
         'maximumDownloadDevices': 'number'
@@ -31,7 +31,7 @@ router.put('/:id', strictArgs({
     'priceCurrency': 'string',
     'quality': 'string',
     'haveSpatialAudio': 'boolean',
-    'resulotion': 'string',
+    'resolution': 'string',
     'supportedDevices': 'string',
     'maximumDevices': 'number',
     'maximumDownloadDevices': 'number'
