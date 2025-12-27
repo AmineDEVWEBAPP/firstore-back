@@ -33,7 +33,13 @@ Account.update = function (id, data, callback) {
 }
 
 Account.findAll = function (callback) {
-    const query = 'SELECT * FROM accounts'
+    const query = `
+                  SELECT 
+                  accounts.*,
+                  offers.name AS offer_name
+                  FROM accounts
+                  JOIN offers ON accounts.offer_id = offers.id;
+                  `
     db.query(query, [], function (err, resutls) {
         if (err) return callback(err)
         callback(null, resutls)
@@ -41,7 +47,14 @@ Account.findAll = function (callback) {
 }
 
 Account.findById = function (id, callback) {
-    const query = 'SELECT * FROM accounts WHERE id = ?'
+    const query = `
+                  SELECT 
+                  accounts.*,
+                  offers.name AS offer_name
+                  FROM accounts
+                  JOIN offers ON accounts.offer_id = offers.id
+                  WHERE accounts.id = ?;
+                  `
     db.query(query, [id], function (err, results) {
         if (err) return callback(err)
         callback(null, results)
