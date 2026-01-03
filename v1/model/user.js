@@ -80,3 +80,10 @@ FROM users
         return callback(err, results)
     })
 }
+
+User.delete = function (id, callback) {
+    const query = 'DELETE FROM users WHERE id = ?'
+    db.query(query, [id], function (err, results) {
+        callback(err, results)
+    })
+}

@@ -134,3 +134,13 @@ export function getUsersNews(_, res) {
         res.end(JSON.stringify(results[0]))
     })
 }
+
+export function deleteUser(req, res) {
+    const id = parseInt(req.params.id)
+    User.delete(id, function (err, results) {
+        if (err) return error(err, res)
+        if (results['affectedRows'] === 0) return error({ 'mess': 'User not found', 'statusCode': 404 }, res)
+        res.writeHead(204)
+        res.end()
+    })
+}
