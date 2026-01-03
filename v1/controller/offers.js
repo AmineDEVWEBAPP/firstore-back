@@ -61,7 +61,7 @@ export function getProfiles(req, res) {
     const id = req.params.id
     Offer.findProfiles(id, function (err, results) {
         if (err) return error(err, res)
-        if (results.length === 0) return error({ 'mess': 'Offer not fould', 'statusCode': 404 }, res)
+        if (results.length === 0) return error({ 'mess': 'Profiles not found', 'statusCode': 404 }, res)
         res.end(JSON.stringify(results))
     })
 }
