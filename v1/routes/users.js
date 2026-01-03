@@ -1,5 +1,5 @@
 import express from 'express'
-import { createUser, getUserById, getUsers, sendUserEmail, updateUser } from '../controller/users.js'
+import { createUser, getUserById, getUsers, getUsersNews, sendUserEmail, updateUser } from '../controller/users.js'
 import authJWT from "../middlewares/admin/authJWT.js";
 import strictArgs from '../middlewares/strictArgs.js'
 import validUserParams from '../middlewares/user/validUserParams.js';
@@ -35,6 +35,9 @@ router.put('/:id',
 
 router.get('/', getUsers)
 
+router.get('/news', getUsersNews)
+
 router.get('/:id', getUserById)
 
 router.post('/:id/notice/email', sendUserEmail)
+

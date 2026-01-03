@@ -127,4 +127,10 @@ export function sendUserEmail(req, res) {
     })
 }
 
-
+export function getUsersNews(_, res) {
+    User.news(function (err, results) {
+        if (err) return error(err)
+        if (results.length === 0) return error({ 'mess': 'Users not found', 'statusCode': 404 }, res)
+        res.end(JSON.stringify(results[0]))
+    })
+}

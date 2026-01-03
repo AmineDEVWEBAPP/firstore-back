@@ -66,3 +66,17 @@ User.findByProfileId = function (profileId, callback) {
         callback(err, results)
     })
 }
+
+User.news = function (callback) {
+    const query = `
+SELECT 
+  COUNT(*) as count,
+  SUM(type = 'whatsapp') as whatsapp_count,
+  SUM(type = 'card') as card_count,
+  SUM(last_pay_time < DATE_SUB(NOW(), INTERVAL 1 MONTH)) as need_payment
+FROM users  
+`
+    db.query(query, [], function (err, results) {
+        return callback(err, results)
+    })
+}
