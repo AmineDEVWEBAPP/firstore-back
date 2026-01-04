@@ -73,11 +73,11 @@ Offer.findAccounds = function (id, callback) {
     })
 }
 
-Offer.findProfiles = function (id, callback) {
+Offer.findProfiles = function (id, callback, { available = false } = {}) {
     const query = `SELECT p.*
                    FROM profiles p
                    JOIN accounts a ON p.account_id = a.id
-                   WHERE a.offer_id = ?`
+                   WHERE a.offer_id = ? ${available ? 'AND p.used = 0' : ''}`
     db.query(query, [id], function (err, results) {
         callback(err, results)
     })

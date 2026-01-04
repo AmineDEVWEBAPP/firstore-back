@@ -59,9 +59,10 @@ export function getAccounts(req, res) {
 
 export function getProfiles(req, res) {
     const id = req.params.id
+    const available = req.query['available'] === 'true'
     Offer.findProfiles(id, function (err, results) {
         if (err) return error(err, res)
         if (results.length === 0) return error({ 'mess': 'Profiles not found', 'statusCode': 404 }, res)
         res.end(JSON.stringify(results))
-    })
+    }, { 'available': available },)
 }
