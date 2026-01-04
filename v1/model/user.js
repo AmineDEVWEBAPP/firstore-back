@@ -30,7 +30,8 @@ User.findAll = function (callback) {
                    accounts.password     AS account_password,
                    profiles.name         AS profile_name,
                    profiles.pin_code     AS profile_pin_code,
-                   offers.name           AS offer_name
+                   offers.name           AS offer_name,
+                   offers.id             AS offer_id
                    FROM users
                    JOIN profiles ON profiles.id = users.profile_id
                    JOIN accounts ON accounts.id = profiles.account_id
@@ -48,7 +49,8 @@ User.findById = function (id, callback) {
                    accounts.password     AS account_password,
                    profiles.name         AS profile_name,
                    profiles.pin_code     AS profile_pin_code,
-                   offers.name           AS offer_name
+                   offers.name           AS offer_name,
+                   offers.id             AS offer_id
                    FROM users
                    JOIN profiles ON profiles.id = users.profile_id
                    JOIN accounts ON accounts.id = profiles.account_id
