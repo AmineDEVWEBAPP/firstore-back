@@ -46,7 +46,6 @@ export function createUser(req, res) {
                             if (!body.type || body.type !== 'card') {
                                 res.writeHead(201)
                                 res.end(JSON.stringify(user))
-                                console.log(body)
                             } else {
                                 const username = user.email.split('@')[0]
                                 sendEmail(user.email,
