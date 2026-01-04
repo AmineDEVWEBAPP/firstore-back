@@ -134,12 +134,55 @@ export function getUsersNews(_, res) {
     })
 }
 
+
 export function deleteUser(req, res) {
     const id = parseInt(req.params.id)
-    User.delete(id, function (err, results) {
+
+    db.pool.getConnection(function (err, conn) {
         if (err) return error(err, res)
-        if (results['affectedRows'] === 0) return error({ 'mess': 'User not found', 'statusCode': 404 }, res)
-        res.writeHead(204)
-        res.end()
+
+        conn.beginTransaction(err => {
+            if (err) {
+                conn.release()
+                return error(err, res)
+            }
+
+            const findUserQuery = 'SELECT * FROM users WHERE id = ?'
+            db.query(conn, findUserQuery, [id], function (err, results) {
+
+                if (err || results.length === 0) return conn.rollback(function () {
+                    conn.release()
+                    if (results.length === 0) return error({ 'mess': 'User not found', 'statusCode': 404 }, res)
+                    error(err, res)
+                })
+
+                const profileId = results[0].profile_id
+
+                User.delete(conn, id, function (err, results) {
+                    if (err) return conn.rollback(function () {
+                        conn.release()
+                        error(err, res)
+                    })
+
+                    const updateProfileQuery = 'UPDATE profiles SET used = false WHERE id = ?'
+                    db.query(conn, updateProfileQuery, [profileId], function (err) {
+                        if (err) return conn.rollback(function () {
+                            conn.release()
+                            error(err, res)
+                        })
+
+                        conn.commit(err => {
+                            if (err) return conn.rollback(function () {
+                                conn.release()
+                                error(err, res)
+                            })
+                            conn.release()
+                            res.writeHead(204)
+                            res.end()
+                        })
+                    })
+                })
+            })
+        })
     })
 }
