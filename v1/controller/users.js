@@ -1,6 +1,7 @@
 import db from '../config/db.js';
 import Profile from '../model/profile.js';
 import User from '../model/user.js';
+import dataToSql from '../utils/dataToSql.js';
 import error from '../utils/error.js';
 import sendEmail from '../utils/sendEmail.js';
 import { updateAccountEmail as newAccountEmail, subscriptionEmail } from './emails.js';
@@ -73,13 +74,74 @@ export function createUser(req, res) {
 export function updateUser(req, res) {
     const id = req.params.id
     const body = req.body
-    User.update(id, body, function (err, results) {
-        if (err) return error(err, res)
-        if (results.affectedRows === 0)
-            return error({ 'mess': 'User not found', 'statusCode': 404 }, res)
-        res.writeHead(204)
-        res.end()
-    })
+    const { profileId } = body
+    if (profileId === undefined) {
+        User.update(id, body, function (err, results) {
+            if (err) return error(err, res)
+            if (results.affectedRows === 0)
+                return error({ 'mess': 'User not found', 'statusCode': 404 }, res)
+            res.writeHead(204)
+            res.end()
+        })
+    } else {
+        db.pool.getConnection(function (err, conn) {
+            if (err) return error(err, res)
+
+            conn.beginTransaction(err => {
+                if (err) {
+                    conn.release()
+                    return error(err, res)
+                }
+
+                // update user
+                const { keys, values } = dataToSql.update(body, User.columns)
+                values.push(id)
+                const query = `UPDATE users SET ${keys} WHERE id = ?`
+                db.query(conn, query, values, function (err, results) {
+                    if (err) return conn.rollback(function () {
+                        conn.release()
+                        error(err, res)
+                    })
+
+                    if (results.affectedRows === 0)
+                        return error({ 'mess': 'User not found', 'statusCode': 404 }, res)
+                    User.findById(id, function (err, results) {
+                        if (err) return conn.rollback(function () {
+                            conn.release()
+                            error(err, res)
+                        })
+
+                        // update profiles
+                        const userProfileId = results[0].profile_id
+                        const updateOldProfileQuery = `
+                     UPDATE profiles
+                     SET used = CASE
+                       WHEN id = ? THEN false
+                       WHEN id = ? THEN true
+                     END
+                     WHERE id IN (?, ?);
+                     `
+                        db.query(conn, updateOldProfileQuery, [userProfileId, profileId, userProfileId, profileId], function (err) {
+                            if (err) return conn.rollback(function () {
+                                conn.release()
+                                error(err, res)
+                            })
+
+                            conn.commit(err => {
+                                if (err) return conn.rollback(function () {
+                                    conn.release()
+                                    error(err, res)
+                                })
+                                conn.release()
+                                res.writeHead(204)
+                                res.end()
+                            })
+                        })
+                    })
+                })
+            })
+        })
+    }
 }
 
 export function getUsers(_, res) {
@@ -158,7 +220,7 @@ export function deleteUser(req, res) {
 
                 const profileId = results[0].profile_id
 
-                User.delete(conn, id, function (err, results) {
+                User.delete(conn, id, function (err) {
                     if (err) return conn.rollback(function () {
                         conn.release()
                         error(err, res)
