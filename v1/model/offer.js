@@ -4,7 +4,7 @@ import dataToQuery from '../utils/dataToSql.js'
 const Offer = {}
 export default Offer
 
-Offer.columns = ['name', 'price', 'price_currency', 'quality', 'resolution', 'have_spatial_audio', 'supported_devices', 'maximum_devices', 'maximum_download_devices']
+Offer.columns = ['name', 'price', 'price_currency', 'resolution', 'have_spatial_audio', 'supported_devices', 'maximum_devices', 'maximum_download_devices', 'most_popular','quality']
 
 Offer.create = function (data, callback) {
     const { keys, values } = dataToQuery.create(data, Offer.columns)
