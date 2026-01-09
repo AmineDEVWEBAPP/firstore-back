@@ -14,11 +14,11 @@ export default router
 router.use(allowMethods(['POST', 'GET']))
 
 router.post('/login', [
-    loginLimiter,
     isAdmin,
     strictArgs({ 'email': 'string', 'password': 'string' }),
     validAdminEmail,
-    correctPassword
+    correctPassword,
+    loginLimiter,
 ], adminLogin)
 
 router.post('/logged', authJWT, check)
