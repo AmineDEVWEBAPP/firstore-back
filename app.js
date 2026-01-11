@@ -23,12 +23,18 @@ app.use((err, _req, res, next) => {
     next()
 })
 
+app.use(function (_req, res,next) {
+    res.setHeader('Content-Type', 'application/json')
+    next()
+})
+
 app.use(helmet())
 
 app.use(cors({
-    'origin': '*',
-    'methods': ['GET', 'POST', 'PATH', 'OPTIONS'],
-    'allowedHeaders': ['Content-Type', 'Authorization']
+    'origin': 'http://localhost:5173',
+    'methods': ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
+    'allowedHeaders': ['Content-Type', 'Authorization'],
+    'credentials': true,
 }))
 
 app.use(express.json())
