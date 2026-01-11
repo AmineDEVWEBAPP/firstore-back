@@ -2,6 +2,7 @@ import express from 'express'
 import { createOffer, deleteOffer, getAccounts, getOfferById, getOffers, getProfiles, updateOffer } from '../controller/offers.js'
 import authJWT from '../middlewares/admin/authJWT.js'
 import strictArgs from '../middlewares/strictArgs.js'
+import limitOffersCount from '../middlewares/limitOffersCount.js'
 
 const router = express.Router()
 export default router
@@ -11,12 +12,13 @@ router.get('/', getOffers)
 router.use(authJWT)
 
 router.post('/', [
+    limitOffersCount,
     strictArgs({
         'name': 'string',
         'price': 'number',
         'priceCurrency': 'string',
         'resolution': 'string',
-        'quality':'string',
+        'quality': 'string',
         'supportedDevices': 'string',
         'maximumDevices': 'number',
         'maximumDownloadDevices': 'number'
@@ -31,7 +33,7 @@ router.put('/:id', strictArgs({
     'priceCurrency': 'string',
     'haveSpatialAudio': 'boolean',
     'resolution': 'string',
-    'quality':'string',
+    'quality': 'string',
     'supportedDevices': 'string',
     'maximumDevices': 'number',
     'maximumDownloadDevices': 'number'
