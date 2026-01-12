@@ -34,7 +34,7 @@ CREATE TABLE `accounts` (
   `password` text NOT NULL,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `it_works` tinyint(1) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+);
 
 -- --------------------------------------------------------
 
@@ -48,7 +48,7 @@ CREATE TABLE `admins` (
   `email` varchar(100) NOT NULL,
   `password_hash` varchar(64) NOT NULL,
   `password_salt` varchar(32) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+);
 
 --
 -- Dumping data for table `admins`
@@ -75,7 +75,7 @@ CREATE TABLE `offers` (
   `maximum_devices` int(11) NOT NULL,
   `maximum_download_devices` int(11) NOT NULL,
   `most_popular` tinyint(1) NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+)
 
 -- --------------------------------------------------------
 
@@ -87,7 +87,7 @@ CREATE TABLE `pending_payment` (
   `token` text NOT NULL,
   `phone` text NOT NULL,
   `create_at` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+)
 
 -- --------------------------------------------------------
 
@@ -102,7 +102,7 @@ CREATE TABLE `profiles` (
   `pin_code` varchar(4) NOT NULL,
   `used` tinyint(1) NOT NULL DEFAULT 0,
   `payment_url` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+)
 
 -- --------------------------------------------------------
 
@@ -118,7 +118,7 @@ CREATE TABLE `users` (
   `type` text NOT NULL DEFAULT 'card',
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `last_pay_time` datetime NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+)
 
 --
 -- Indexes for dumped tables

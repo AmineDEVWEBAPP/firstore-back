@@ -13,6 +13,7 @@ const env = {
   'DB_USER': envFile.DB_USER,
   'DB_PASSWORD': envFile.DB_PASSWORD,
   'DB_NAME': envFile.DB_NAME,
+  'DB_PORT': Number(envFile.DB_PORT),
   'JWT_SECRET': envFile.JWT_SECRET
 }
 
