@@ -2,8 +2,6 @@ process.loadEnvFile('.env')
 
 const envName = process.env.ENV_NAME === 'production' ? 'prod' : 'dev'
 
-if (envName === 'prod') process.loadEnvFile('.env.prod')
-
   const env={
     'envName':envName,
     'port':process.env.PORT,
