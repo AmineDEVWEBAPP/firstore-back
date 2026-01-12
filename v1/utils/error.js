@@ -5,7 +5,8 @@ export default function error(err, res) {
     const statusCode = err.statusCode ? err.statusCode : 500
     const message = err.mess ? err.mess : 'Internal server error'
     res.writeHead(statusCode)
-    res.end(`{"error": "${message}"}`)
+    res.end(`{"errorff": "${err}"}`)
+    // res.end(`{"error": "${message}"}`)
     err.mess = message
     err.statusCode = statusCode
     loggerError(err)
