@@ -1,31 +1,6 @@
--- phpMyAdmin SQL Dump
--- version 5.2.3deb1
--- https://www.phpmyadmin.net/
---
--- Host: localhost:3306
--- Generation Time: Jan 12, 2026 at 04:19 AM
--- Server version: 11.8.3-MariaDB-1+b1 from Debian
--- PHP Version: 8.4.11
-
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
-
---
--- Database: `firstore`
---
-
--- --------------------------------------------------------
-
---
--- Table structure for table `accounts`
---
 
 CREATE TABLE `accounts` (
   `id` int(11) NOT NULL,
@@ -75,7 +50,7 @@ CREATE TABLE `offers` (
   `maximum_devices` int(11) NOT NULL,
   `maximum_download_devices` int(11) NOT NULL,
   `most_popular` tinyint(1) NOT NULL DEFAULT 0
-)
+);
 
 -- --------------------------------------------------------
 
@@ -87,7 +62,7 @@ CREATE TABLE `pending_payment` (
   `token` text NOT NULL,
   `phone` text NOT NULL,
   `create_at` datetime NOT NULL DEFAULT current_timestamp()
-)
+);
 
 -- --------------------------------------------------------
 
@@ -102,7 +77,7 @@ CREATE TABLE `profiles` (
   `pin_code` varchar(4) NOT NULL,
   `used` tinyint(1) NOT NULL DEFAULT 0,
   `payment_url` text NOT NULL
-)
+);
 
 -- --------------------------------------------------------
 
@@ -115,10 +90,10 @@ CREATE TABLE `users` (
   `profile_id` int(11) DEFAULT NULL,
   `email` text DEFAULT NULL,
   `phone` text NOT NULL,
-  `type` text NOT NULL DEFAULT 'card',
+  `type` varchar(10) NOT NULL DEFAULT 'card',
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `last_pay_time` datetime NOT NULL DEFAULT current_timestamp()
-)
+);
 
 --
 -- Indexes for dumped tables
