@@ -19,9 +19,9 @@ export function adminLogin(req, res) {
             'httpOnly': true,
             'path': '/',
             'secure': env.envName === 'prod',
-            'sameSite': 'strict',
+            'sameSite': 'none',
             'expires': expiresIn
-        }) 
+        })
         res.writeHead(200)
         res.end('{"status": "success"}')
     })
