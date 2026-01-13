@@ -11,37 +11,38 @@ import profilesRoute from './v1/routes/profiles.js'
 import authJWT from './v1/middlewares/admin/authJWT.js'
 import usersRoute from './v1/routes/users.js'
 import cookieParser from 'cookie-parser'
+import error from './v1/utils/error.js'
 
 const app = express()
 
-app.use((err, _req, res, next) => {
-    if (err) {
-        console.error(err)
-        res.writeHead(500, { 'Content-Type': 'application/json' })
-        return res.end('{"error": "Internal Server Error"}')
-    }
-    next()
-})
+app.use(
+    cors({
+        'origin': 'http://localhost:5173',
+        'credentials': true,
+        'methods': ["GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"],
+        'allowedHeaders': ["Content-Type", "Authorization"]
+    })
+);
 
-app.use(function (_req, res,next) {
-    res.setHeader('Content-Type', 'application/json')
-    next()
-})
+app.options(/.*/, cors())
 
 app.use(helmet())
 
-app.use(cors({
-    'origin': 'http://localhost:5173',
-    'methods': ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
-    'allowedHeaders': ['Content-Type', 'Authorization'],
-    'credentials': true,
-}))
-
 app.use(express.json())
+
+app.use((err, _req, res, next) => {
+    if (err) return error(err, res)
+    next()
+})
 
 app.use(express.urlencoded({ extended: true }));
 
 app.use(cookieParser())
+
+app.use(function (_req, res, next) {
+    res.setHeader('Content-Type', 'application/json')
+    next()
+})
 
 app.use('/api/v1/test', testRouter)
 
